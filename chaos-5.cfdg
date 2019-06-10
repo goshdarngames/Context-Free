@@ -1,0 +1,56 @@
+startshape PIC []
+
+CF::Impure = 1
+CF::MaxNatural = 1000000
+
+numPoints = 5
+numDots = 1000000
+dotSize = 0.1
+triSize = 30
+cornerSize = 2
+
+cPos(n)=rand( -1*triSize, triSize )
+
+//Regular triangle
+vP = 0, triSize, -triSize, -triSize, triSize, -triSize
+
+//random triangle
+//vP = cPos(), cPos(), cPos(), cPos(), cPos(), cPos()
+
+vector2 point ( n ) = n*triSize*sin(360/numPoints), n*triSize*cos(360/numPoints)
+
+vector2 randpoint () = point ( randint(numPoints) )
+
+vector2 midpoint ( vector2 v1, vector2 v2 ) = (v1[0]+v2[0])/2,(v1[1]+v2[1])/2
+
+startpos = midpoint ( point(0), point(1) )
+
+shape PIC
+{
+	TRI [b 1 sat 1]
+//	DOT ( startpos, numDots )  [ a -0.9 ]
+}
+
+shape TRI
+{
+	p0=point(0)
+	p1=point(1)
+	p2=point(2)
+	CIRCLE [ x p0[0] y p0[1] s cornerSize]
+	CIRCLE [ x p1[0] y p1[1] s cornerSize]
+	CIRCLE [ x p2[0] y p2[1] s cornerSize]
+
+	CIRCLE [ x startpos[ 0 ] y startpos[ 1 ] s cornerSize h 180 ]
+}
+
+shape DOT ( vector2 curr, natural n )
+{
+	if ( n > 0 )
+	{
+		CIRCLE [ x curr[0] y curr[1] s dotSize ] 
+
+		next = midpoint ( curr, randpoint() )
+
+		DOT ( next, n--1 ) []
+	}	
+}
