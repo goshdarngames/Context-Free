@@ -1,0 +1,50 @@
+startpos = 0, 0
+startshape PIC []
+
+CF::Impure = 1
+CF::MaxNatural = 1000000
+
+numDots = 5000
+dotSize = 0.5
+triSize = 100
+cornerSize = 5
+
+cPos()=rand( -1*triSize, triSize )
+
+//Regular triangle
+//vP = 0, triSize, -triSize, -triSize, triSize, -triSize
+
+//random triangle
+vP = cPos(), cPos(), cPos(), cPos(), cPos(), cPos()
+
+shape PIC
+{
+	TRI [b 1 sat 1]
+	DOT ( startpos, numDots )  [ ]
+}
+
+shape TRI
+{
+	CIRCLE [ x vP[ 0 ] y vP[ 1 ] s cornerSize]
+	CIRCLE [ x vP[ 2 ] y vP[ 3 ] s cornerSize]
+	CIRCLE [ x vP[ 4 ] y vP[ 5 ] s cornerSize]
+}
+
+shape DOT ( vector2 curr, natural n )
+{
+	if ( n > 0 )
+	{
+		CIRCLE [ x curr[0] y curr[1] s dotSize ] 
+
+		d = randint ( 3 )*2
+
+		vD = vP[ d ], vP[ ( d+1 ) ]
+
+		n1=( vD[0] + curr[0] )/2
+		n2=( vD[1] + curr[1] )/2
+
+		next = n1, n2
+
+		DOT ( next, n--1 ) []
+	}	
+}
