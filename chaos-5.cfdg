@@ -1,23 +1,25 @@
-startshape PIC []
 
 CF::Impure = 1
-CF::MaxNatural = 1000000
+CF::MaxNatural = 2000000
 
-numPoints = 5
-numDots = 1000000
-dotSize = 0.1
-triSize = 30
+recurseDepth = 4
+numPoints = randint(10)+3
+polySize = 30
 cornerSize = 2
 
-cPos(n)=rand( -1*triSize, triSize )
+numDots = 20000
+dotSize = 0.1
+cPos(n)=rand( -1*polySize, polySize )
 
 //Regular triangle
-vP = 0, triSize, -triSize, -triSize, triSize, -triSize
+vP = 0, polySize, -polySize, -polySize, polySize, -polySize
 
 //random triangle
 //vP = cPos(), cPos(), cPos(), cPos(), cPos(), cPos()
 
-vector2 point ( n ) = n*triSize*sin(360/numPoints), n*triSize*cos(360/numPoints)
+arc = 360/numPoints
+
+vector2 point ( n ) = polySize*sin(n*arc), polySize*cos(n*arc)
 
 vector2 randpoint () = point ( randint(numPoints) )
 
@@ -25,22 +27,23 @@ vector2 midpoint ( vector2 v1, vector2 v2 ) = (v1[0]+v2[0])/2,(v1[1]+v2[1])/2
 
 startpos = midpoint ( point(0), point(1) )
 
-shape PIC
-{
-	TRI [b 1 sat 1]
-//	DOT ( startpos, numDots )  [ a -0.9 ]
-}
+startshape POLY ( recurseDepth ) []
 
-shape TRI
+shape POLY ( natural n )
 {
-	p0=point(0)
-	p1=point(1)
-	p2=point(2)
-	CIRCLE [ x p0[0] y p0[1] s cornerSize]
-	CIRCLE [ x p1[0] y p1[1] s cornerSize]
-	CIRCLE [ x p2[0] y p2[1] s cornerSize]
+	if ( n > 0 )
+	{
+		DOT ( startpos, numDots )  [ a 1 ]
+		
+		loop i=numPoints []
+		{
+			pI=point(i)
+			CIRCLE [ x pI[0] y pI[1] s cornerSize]
+			POLY ( n--1 )  [ b -1 x pI[0] y pI[1] ]
+		}
 
-	CIRCLE [ x startpos[ 0 ] y startpos[ 1 ] s cornerSize h 180 ]
+		CIRCLE [ x startpos[ 0 ] y startpos[ 1 ] s cornerSize h 180 ]
+	}
 }
 
 shape DOT ( vector2 curr, natural n )
