@@ -1,8 +1,46 @@
-fA = [ 0.00,  0.85,  0.20, -0.15 ]
-fB = [ 0.00,  0.04, -0.26,  0.28 ]
-fC = [ 0.00, -0.04,  0.23,  0.26 ]
-fD = [ 0.16,  0.85,  0.22,  0.24 ]
-fE = [ 0.00,  0.00,  0.00,  0.00 ]
-fF = [ 0.00,  1.60,  1.60,  0.44 ]
-fP = [ 0.01,  0.85,  0.07,  0.07 ]
+CF::Impure = 1
+
+fA =  0.00,  0.85,  0.20, -0.15 
+fB =  0.00,  0.04, -0.26,  0.28 
+fC =  0.00, -0.04,  0.23,  0.26 
+fD =  0.16,  0.85,  0.22,  0.24 
+fE =  0.00,  0.00,  0.00,  0.00 
+fF =  0.00,  1.60,  1.60,  0.44 
+
+fX ( natural n, vector2 pos ) = fA[n] * pos[0] + fB[n] * pos[1] + fE[n]
+fY ( natural n, vector2 pos ) = fC[n] * pos[0] + fD[n] * pos[1] + fF[n]
+
+vector2 F ( natural n, vector2 pos ) = fX ( n, pos ), fY ( n, pos )
+
+start = 0,0
+
+startshape FERN ( 10000, start ) []
+
+shape FERN ( natural n, vector2 pos )
+{
+	if ( n > 0 )
+	{
+		CIRCLE [ x pos[0] y pos[1] s 0.05 ]
+
+		FERN_T ( n--1, pos ) []
+	}
+}
+
+shape FERN_T ( natural n, vector2 pos )
+rule 1%
+{
+	FERN ( n, F ( 0, pos ) ) []
+}
+rule 85%
+{
+	FERN ( n, F ( 1, pos ) ) []
+}
+rule 7%
+{
+	FERN ( n, F ( 2, pos ) ) []
+}
+rule 7%
+{
+	FERN ( n, F ( 3, pos ) ) []
+}
 
