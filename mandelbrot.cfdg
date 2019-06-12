@@ -1,0 +1,42 @@
+gridSize = 100, 100
+
+realRange = -1, 1
+imagRange = -1, 1
+
+maxIter = 10
+
+F_iter ( c, iter, n ) = 
+	if( iter==0,
+		n,
+		F_iter ( c, iter-1, n^2 + c ) )
+
+C ( real, imag ) = sqrt ( real^2 + imag^2 )
+
+F ( real, imag ) = F_iter ( C( real, imag ), maxIter, 0 )
+
+
+startshape M []
+
+shape M
+{
+
+	realDist = realRange[1] - realRange[0]
+
+	imagDist = imagRange[1] - imagRange[0]
+
+	loop i=gridSize[0] [ x 1 ]
+	{
+		real = realRange[0] + ( i/gridSize[0] ) * realDist
+
+		loop j=gridSize[1] [ y 1 ]
+		{
+			imag = imagRange[0] + ( j/gridSize[0] ) * imagDist
+
+			mag = abs ( F ( real, imag ) )
+
+			B = ( mag - 2 ) + mag/10000
+
+			SQUARE [ b B ]
+		}
+	}
+}
