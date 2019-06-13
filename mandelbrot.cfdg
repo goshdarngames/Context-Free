@@ -1,18 +1,27 @@
-gridSize = 100, 100
+gridSize = 1024,1024
 
 realRange = -1, 1
 imagRange = -1, 1
 
 maxIter = 10
 
-F_iter ( c, iter, n ) = 
-	if( iter==0,
+vector2 C ( real, imag ) = real, imag
+
+vector2 C_Add ( vector2 c1, vector2 c2 ) = (c1[0]+c2[0]), (c1[1]+c2[1])
+
+vector2 C_Mul ( vector2 c1, vector2 c2 ) = 
+	c1[0]*c2[0] - c1[1]*c2[1], c1[0]*c1[1] + c2[0]*c2[1]
+
+number F_real ( vector2 cZ ) = abs ( cZ[0] )
+
+number F_iter ( vector2 c, vector2 cZ, n ) = 
+	if( n==0 || F_real ( cZ ) > 2,
+	
 		n,
-		F_iter ( c, iter-1, n^2 + c ) )
 
-C ( real, imag ) = sqrt ( real^2 + imag^2 )
+		F_iter ( c, C_Add ( C_Mul ( cZ, cZ ), c ), n-1 ) )
 
-F ( real, imag ) = F_iter ( C( real, imag ), maxIter, 0 )
+number F ( vector2 c ) =  F_iter ( c, C( 0, 0 ), maxIter ) 
 
 
 startshape M []
@@ -32,9 +41,7 @@ shape M
 		{
 			imag = imagRange[0] + ( j/gridSize[0] ) * imagDist
 
-			mag = abs ( F ( real, imag ) )
-
-			B = ( mag - 2 ) + mag/10000
+			B = ( 1 / maxIter ) * F ( C ( real, imag ) )
 
 			SQUARE [ b B ]
 		}
