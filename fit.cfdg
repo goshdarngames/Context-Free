@@ -5,13 +5,24 @@ seq = randint( 2^seqLen )
 
 natural nextIdx ( natural n ) = mod ( n+1, seqLen )
 
+natural seqBit ( natural n ) = bitand ( seq, 2^mod( n, seqLen ) )
+
 
 startshape START []
 
 shape START
 {
-	SQ_A ( 8, 0 ) [ b 1 sat 1 ]
+	SQ_A ( 10, 0 ) [ b 1 sat 1 ]
 }
+
+/*
+Each shape has 4 stages:
+   A - Check n > 0 and advance sequence idx
+   B - Transform shape according to sequence.
+       Note:  Shapes have different rules for which transforms are allowed.
+   C - Draw the shape.
+   D - Create child shapes.
+*/
 
 /****************************************************************************
  * SQ - Square
@@ -27,7 +38,14 @@ shape SQ_A ( natural n, natural seqIdx )
 
 shape SQ_B ( natural n, natural seqIdx )
 {
-	SQ_C ( n, seqIdx ) []
+	R = 90*seqBit(seqIdx)
+
+	H1 =  seqBit( seqIdx )
+	H2 = -1*seqBit( seqIdx+1 )
+
+	H = ( H1+H2 ) * 3
+
+	SQ_C ( n, seqIdx ) [ r R  h H]
 }
 
 
@@ -41,8 +59,8 @@ shape SQ_C ( natural n, natural seqIdx )
 shape SQ_D ( natural n, natural seqIdx )
 rule 0.2
 {
-	RA_A  ( n--1, seqIdx ) [ h 180 ]
-	RA_A  ( n--1, seqIdx ) [ r 180 ]
+	RA_A  ( n--1, seqIdx ) []
+	RA_A  ( n--1, seqIdx ) []
 }
 
 /****************************************************************************
@@ -59,7 +77,14 @@ shape RA_A ( natural n, natural seqIdx )
 
 shape RA_B ( natural n, natural seqIdx )
 {
-	RA_C ( n, seqIdx ) [ flip 45 ]
+	F = 45*seqBit(seqIdx)
+
+	H1 =  seqBit( seqIdx )
+	H2 = -1*seqBit( seqIdx+1 )
+
+	H = ( H1+H2 ) * 3
+
+	RA_C ( n, seqIdx ) [ h H flip F ]
 }
 
 shape RA_C ( natural n, natural seqIdx )
@@ -71,10 +96,10 @@ shape RA_C ( natural n, natural seqIdx )
 
 shape RA_D ( natural n, natural seqIdx )
 {
-	SQ_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y -0.25 h 180 ]
+	SQ_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y -0.25 ]
 
-	RA_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y 0.25 h 180 ]
-	RA_A  ( n--1, seqIdx ) [ s 0.5 x -0.25 y -0.25 h 180 ]
+	RA_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y 0.25 ]
+	RA_A  ( n--1, seqIdx ) [ s 0.5 x -0.25 y -0.25 ]
 }
 
 
