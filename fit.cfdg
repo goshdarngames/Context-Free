@@ -1,82 +1,87 @@
 CF::MaxNatural = 4294967296
 seqLen = 32
 
+seq = randint( 2^seqLen )
+
+natural nextIdx ( natural n ) = mod ( n+1, seqLen )
+
+
 startshape START []
 
 shape START
 {
-	SQ_A ( 100, randint( 2^seqLen ) ) [ b 1 sat 1 ]
+	SQ_A ( 100, 0 ) [ b 1 sat 1 ]
 }
 
 /****************************************************************************
  * SQ - Square
  ***************************************************************************/
 
-shape SQ_A ( natural n, natural seq )
+shape SQ_A ( natural n, natural seqIdx )
 {
 	if ( n > 0 )
 	{
-		SQ_B ( n, seq ) []
+		SQ_B ( n, nextIdx ( seqIdx ) ) []
 	}
 }
 
-shape SQ_B ( natural n, natural seq )
+shape SQ_B ( natural n, natural seqIdx )
 rule
 {
-	SQ_C ( n, seq ) []
+	SQ_C ( n, seqIdx ) []
 }
 
 rule
 {
-	SQ_B ( n, seq ) [ r 90 ]
+	SQ_B ( n, seqIdx ) [ r 90 ]
 }
 
-shape SQ_C ( natural n, natural seq )
+shape SQ_C ( natural n, natural seqIdx )
 {
 	SQUARE []
 
-	SQ_D ( n, seq ) []
+	SQ_D ( n, seqIdx ) []
 }
 
-shape SQ_D ( natural n, natural seq )
+shape SQ_D ( natural n, natural seqIdx )
 rule 0.2
 {
-	RA_A  ( n--1, seq ) [ h 180 ]
-	RA_A  ( n--1, seq ) [ r 180 ]
+	RA_A  ( n--1, seqIdx ) [ h 180 ]
+	RA_A  ( n--1, seqIdx ) [ r 180 ]
 }
 rule
 {
-	SQ_A  ( n--1, seq ) [ s 0.9 h 180 ]
+	SQ_A  ( n--1, seqIdx ) [ s 0.9 h 180 ]
 }
 
 /****************************************************************************
  * RA - Right Angle Triangle
  ***************************************************************************/
 
-shape RA_A ( natural n, natural seq )
+shape RA_A ( natural n, natural seqIdx )
 {
 	if ( n > 0 )
 	{
-		RA_B ( n, seq ) []
+		RA_B ( n, nextIdx ( seqIdx ) ) []
 	}
 }
 
-shape RA_B ( natural n, natural seq )
+shape RA_B ( natural n, natural seqIdx )
 {
-	RA_C ( n, seq ) [ flip 45 ]
+	RA_C ( n, seqIdx ) [ flip 45 ]
 }
 
-shape RA_C ( natural n, natural seq )
+shape RA_C ( natural n, natural seqIdx )
 {
 	RIGHT_ANGLE []
 
-	RA_D ( n, seq ) [] 
+	RA_D ( n, seqIdx ) [] 
 }
 
-shape RA_D ( natural n, natural seq )
+shape RA_D ( natural n, natural seqIdx )
 {
 	//add two more RA triangles here.
-	SQ_A  ( n--1, seq ) [ s 0.5 x 0.25 y -0.25 h 180 ]
+	SQ_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y -0.25 h 180 ]
 }
 
 
