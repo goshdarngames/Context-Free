@@ -1,0 +1,37 @@
+startshape SQ_TEST []
+
+shape SQ_TEST
+{
+	SQUARE [ b 1 sat 1 ]
+
+	loop i=4 [ x 0.25 ]
+	{
+		loop j=4 [ y 0.25 ]
+		{
+			SQUARE [  x (-0.5+(1/8)) y (-0.5+(1/8)) s 0.25 a -0.9 ]
+		}
+	}
+}
+
+shape RA_TEST
+{
+	RA [ sat 1  b 1]
+	RA [r 180]
+
+	//SQUARE   [ s 0.5 x 0.25 y -0.25 ]
+
+	//RA   [ s 0.5 x 0.25 y 0.25 ]
+	//RA   [ s 0.5 x -0.25 y -0.25 ]
+}
+
+path RA
+{
+	MOVETO ( 0.5, 0.5 )
+
+	LINETO ( -0.5, -0.5 )
+	LINETO ( 0.5, -0.5 )
+	LINETO ( 0.5, 0.5 )
+
+	CLOSEPOLY ()
+	FILL  () []
+}

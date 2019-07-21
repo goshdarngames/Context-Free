@@ -12,15 +12,14 @@ startshape START []
 
 shape START
 {
-	SQ_A ( 10, 0 ) [ b 1 sat 1 ]
+	SQ_A ( 7, 0 ) [ b 0.5 sat 0.5 ]
 }
 
 /*
 Each shape has 4 stages:
-   A - Check n > 0 and advance sequence idx
+   A - Check n > 0 and advance sequence idx or draw final shape
    B - Transform shape according to sequence.
        Note:  Shapes have different rules for which transforms are allowed.
-   C - Draw the shape.
    D - Create child shapes.
 */
 
@@ -34,6 +33,10 @@ shape SQ_A ( natural n, natural seqIdx )
 	{
 		SQ_B ( n, nextIdx ( seqIdx ) ) []
 	}
+	else
+	{
+		SQUARE []
+	}
 }
 
 shape SQ_B ( natural n, natural seqIdx )
@@ -45,22 +48,39 @@ shape SQ_B ( natural n, natural seqIdx )
 
 	H = ( H1+H2 ) * 3
 
-	SQ_C ( n, seqIdx ) [ r R  h H]
+	S1 = seqBit ( 4  )
+	S2 = seqBit ( 10 )
+	
+	S = ( ( S1 * -1 ) + S2 ) * 0.1
+
+	B1 = seqBit ( 6 )
+	B2 = seqBit ( 8 )
+	
+	B = ( ( B1 * -1 ) + B2 ) * 0.1
+
+	SQ_C ( n, seqIdx ) [ r R h H sat S b B ]
 }
 
 
 shape SQ_C ( natural n, natural seqIdx )
+rule 
 {
-	SQUARE []
-
-	SQ_D ( n, seqIdx ) []
+	RA_A  ( n--1, seqIdx ) []
+	RA_A  ( n--1, seqIdx ) [ r 180 ]
 }
-
-shape SQ_D ( natural n, natural seqIdx )
-rule 0.2
+rule
 {
-	RA_A  ( n--1, seqIdx ) []
-	RA_A  ( n--1, seqIdx ) []
+	gridSize = randint ( 4 ) + 1
+
+	loop i=gridSize [ x ( 1/gridSize ) ]
+	{
+		loop j=gridSize [ y (1/gridSize) ]
+		{
+			X = -0.5+(1/(gridSize*2))
+			Y = -0.5+(1/(gridSize*2))
+			SQ_A ( n--gridSize, seqIdx ) [ x X y Y s (1/gridSize) ]
+		}
+	}
 }
 
 /****************************************************************************
@@ -73,6 +93,10 @@ shape RA_A ( natural n, natural seqIdx )
 	{
 		RA_B ( n, nextIdx ( seqIdx ) ) []
 	}
+	else
+	{
+		RIGHT_ANGLE []
+	}
 }
 
 shape RA_B ( natural n, natural seqIdx )
@@ -84,17 +108,20 @@ shape RA_B ( natural n, natural seqIdx )
 
 	H = ( H1+H2 ) * 3
 
-	RA_C ( n, seqIdx ) [ h H flip F ]
+	S1 = seqBit ( 4  )
+	S2 = seqBit ( 10 )
+	
+	S = ( ( S1 * -1 ) + S2 ) * 0.1
+
+	B1 = seqBit ( 6 )
+	B2 = seqBit ( 8 )
+	
+	B = ( ( B1 * -1 ) + B2 ) * 0.1
+
+	RA_C ( n, seqIdx ) [ flip F h H sat S b B ]
 }
 
 shape RA_C ( natural n, natural seqIdx )
-{
-	RIGHT_ANGLE []
-
-	RA_D ( n, seqIdx ) [] 
-}
-
-shape RA_D ( natural n, natural seqIdx )
 {
 	SQ_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y -0.25 ]
 
