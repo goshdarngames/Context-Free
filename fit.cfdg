@@ -1,68 +1,89 @@
+CF::MaxNatural = 4294967296
+seqLen = 32
+
 startshape START []
 
 shape START
 {
-	SQ_A [ b 1 sat 1 ]
+	SQ_A ( 100, randint( 2^seqLen ) ) [ b 1 sat 1 ]
 }
 
 /****************************************************************************
  * SQ - Square
  ***************************************************************************/
 
-shape SQ_A
-rule
+shape SQ_A ( natural n, natural seq )
 {
-	SQ_B []
-}
-rule
-{
-	SQ_B [ r 90 ]
+	if ( n > 0 )
+	{
+		SQ_B ( n, seq ) []
+	}
 }
 
+shape SQ_B ( natural n, natural seq )
+rule
+{
+	SQ_C ( n, seq ) []
+}
 
-shape SQ_B
+rule
+{
+	SQ_B ( n, seq ) [ r 90 ]
+}
+
+shape SQ_C ( natural n, natural seq )
 {
 	SQUARE []
 
-	SQ_C []
+	SQ_D ( n, seq ) []
 }
 
-shape SQ_C
+shape SQ_D ( natural n, natural seq )
 rule 0.2
 {
-	RA_A [ h 180 ]
-	RA_A [ r 180 ]
+	RA_A  ( n--1, seq ) [ h 180 ]
+	RA_A  ( n--1, seq ) [ r 180 ]
 }
 rule
 {
-	SQ_A [ s 0.9 h 180 ]
+	SQ_A  ( n--1, seq ) [ s 0.9 h 180 ]
 }
 
 /****************************************************************************
  * RA - Right Angle Triangle
  ***************************************************************************/
 
-shape RA_A
+shape RA_A ( natural n, natural seq )
 {
-	RA_B [ flip 45 ]
+	if ( n > 0 )
+	{
+		RA_B ( n, seq ) []
+	}
 }
 
-shape RA_B
+shape RA_B ( natural n, natural seq )
+{
+	RA_C ( n, seq ) [ flip 45 ]
+}
+
+shape RA_C ( natural n, natural seq )
 {
 	RIGHT_ANGLE []
 
-	RA_C [] 
+	RA_D ( n, seq ) [] 
 }
 
-shape RA_C
+shape RA_D ( natural n, natural seq )
 {
-	SQ_A [ s 0.5 x 0.25 y -0.25 h 180 ]
+	//add two more RA triangles here.
+	SQ_A  ( n--1, seq ) [ s 0.5 x 0.25 y -0.25 h 180 ]
 }
 
 
 path RIGHT_ANGLE
 {
-	LINETO ( 0.5, 0.5 )
+	MOVETO ( 0.5, 0.5 )
+
 	LINETO ( -0.5, -0.5 )
 	LINETO ( 0.5, -0.5 )
 	LINETO ( 0.5, 0.5 )
