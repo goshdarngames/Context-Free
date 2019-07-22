@@ -2,7 +2,7 @@
 //for the origin to be the centroid of the triangle
 ra_ratio = ( sqrt ( 2 ) / 4 ) / tan ( 45 )
 
-startshape RA_SQ_TEST []
+startshape RA_RA_TEST []
 
 shape SQ_TEST
 {
@@ -30,6 +30,14 @@ shape RA_TEST
 	//RA   [ s 0.5 x -0.25 y -0.25 ]
 }
 
+shape RA_RA_TEST
+{
+	RA []
+
+	RA [ b 1 sat 1 x (0.5-(ra_ratio/2)) y (ra_ratio/2) s 0.5 ]
+
+	RA [ b 1 sat 1 x -(ra_ratio/2) y (-0.5+(ra_ratio/2)) s 0.5 ]
+}
 shape RA_SQ_TEST
 {
 	SQUARE []
