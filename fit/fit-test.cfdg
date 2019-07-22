@@ -1,4 +1,8 @@
-startshape RA_TEST []
+//distance from the origin to the leg of a right-angle triangle in order
+//for the origin to be the centroid of the triangle
+ra_ratio = ( sqrt ( 2 ) / 4 ) / tan ( 45 )
+
+startshape RA_SQ_TEST []
 
 shape SQ_TEST
 {
@@ -26,8 +30,18 @@ shape RA_TEST
 	//RA   [ s 0.5 x -0.25 y -0.25 ]
 }
 
+shape RA_SQ_TEST
+{
+	SQUARE []
+
+	X = -0.5 + ra_ratio
+	Y =  0.5 - ra_ratio
+
+	RA [ b 1 sat 1 x X y Y ]
+}
+
 //vertex points for unit right angle
-ra_x1 = -1 * ( sqrt ( 2 ) / 4 ) / tan ( 45 )
+ra_x1 = -1 * ra_ratio
 ra_y1 = -1 - ra_x1
 
 path RA
@@ -39,6 +53,5 @@ path RA
 
 	CLOSEPOLY ()
 
-	STROKE () []
 	FILL  () []
 }
