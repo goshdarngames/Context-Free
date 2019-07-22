@@ -1,4 +1,4 @@
-startshape SQ_TEST []
+startshape RA_TEST []
 
 shape SQ_TEST
 {
@@ -16,7 +16,9 @@ shape SQ_TEST
 shape RA_TEST
 {
 	RA [ sat 1  b 1]
-	RA [r 180]
+	RA [ s 0.95 ]
+
+	RA_TEST [ s 0.7 ] 
 
 	//SQUARE   [ s 0.5 x 0.25 y -0.25 ]
 
@@ -24,14 +26,19 @@ shape RA_TEST
 	//RA   [ s 0.5 x -0.25 y -0.25 ]
 }
 
+//vertex points for unit right angle
+ra_x1 = -1 * ( sqrt ( 2 ) / 4 ) / tan ( 45 )
+ra_y1 = -1 - ra_x1
+
 path RA
 {
-	MOVETO ( 0.5, 0.5 )
+	MOVETO ( ra_x1, ra_y1 )
 
-	LINETO ( -0.5, -0.5 )
-	LINETO ( 0.5, -0.5 )
-	LINETO ( 0.5, 0.5 )
+	LINETO (   ra_x1, ra_y1+1 )
+	LINETO ( ra_x1+1, ra_y1+1 )
 
 	CLOSEPOLY ()
+
+	STROKE () []
 	FILL  () []
 }
