@@ -1,4 +1,7 @@
 CF::MaxNatural = 4294967296
+
+//sequence used to control order of transformations
+
 seqLen = 32
 
 seq = randint( 2^seqLen )
@@ -6,6 +9,10 @@ seq = randint( 2^seqLen )
 natural nextIdx ( natural n ) = mod ( n+1, seqLen )
 
 natural seqBit ( natural n ) = bitand ( seq, 2^mod( n, seqLen ) )
+
+//distance from the origin to the leg of a right-angle triangle in order
+//for the origin to be the centroid of the triangle
+ra_ratio = ( sqrt ( 2 ) / 4 ) / tan ( 45 )
 
 
 startshape START []
@@ -130,14 +137,18 @@ shape RA_C ( natural n, natural seqIdx )
 }
 
 
+//vertex points for unit right angle
+ra_x1 = -1 * ra_ratio
+ra_y1 = -1 - ra_x1
+
 path RIGHT_ANGLE
 {
-	MOVETO ( 0.5, 0.5 )
+	MOVETO ( ra_x1, ra_y1 )
 
-	LINETO ( -0.5, -0.5 )
-	LINETO ( 0.5, -0.5 )
-	LINETO ( 0.5, 0.5 )
+	LINETO (   ra_x1, ra_y1+1 )
+	LINETO ( ra_x1+1, ra_y1+1 )
 
 	CLOSEPOLY ()
+
 	FILL  () []
 }
