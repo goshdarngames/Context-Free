@@ -42,7 +42,7 @@ shape SQ_A ( natural n, natural seqIdx )
 	}
 	else
 	{
-		SQUARE []
+		SQUARE [ s 0.95 ]
 	}
 }
 
@@ -65,15 +65,18 @@ shape SQ_B ( natural n, natural seqIdx )
 	
 	B = ( ( B1 * -1 ) + B2 ) * 0.1
 
-	SQ_C ( n, seqIdx ) [ r R h H sat S b B ]
+	SQ_C ( n, seqIdx ) [ ] // r R h H sat S b B ]
 }
 
 
 shape SQ_C ( natural n, natural seqIdx )
 rule 
 {
-	RA_A  ( n--1, seqIdx ) []
-	RA_A  ( n--1, seqIdx ) [ r 180 ]
+	r1 = -0.5 + ra_ratio
+	r2 =  0.5 - ra_ratio
+
+	RA_A  ( n--1, seqIdx ) [ x r1 y r2]
+	RA_A  ( n--1, seqIdx ) [ x r2 y r1 r 180 ]
 }
 rule
 {
@@ -102,7 +105,7 @@ shape RA_A ( natural n, natural seqIdx )
 	}
 	else
 	{
-		RIGHT_ANGLE []
+		RIGHT_ANGLE [ s 0.95 ]
 	}
 }
 
@@ -125,15 +128,20 @@ shape RA_B ( natural n, natural seqIdx )
 	
 	B = ( ( B1 * -1 ) + B2 ) * 0.1
 
-	RA_C ( n, seqIdx ) [ flip F h H sat S b B ]
+	RA_C ( n, seqIdx ) []// flip F h H sat S b B ]
 }
 
 shape RA_C ( natural n, natural seqIdx )
 {
-	SQ_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y -0.25 ]
+	sX = -1 * ( 0.25 - (1-ra_ratio) ) - 0.5
+	sY = ( 0.25 - (1-ra_ratio) ) + 0.5
+	
+	SQ_A  ( n--1, seqIdx ) [ s 0.5 x sX y sY ]
 
-	RA_A  ( n--1, seqIdx ) [ s 0.5 x 0.25 y 0.25 ]
-	RA_A  ( n--1, seqIdx ) [ s 0.5 x -0.25 y -0.25 ]
+	RA_A  ( n--1, seqIdx ) [ b 1 sat 1 x (0.5-(ra_ratio/2)) y (ra_ratio/2) s 0.5 ]
+
+	RA_A  ( n--1, seqIdx )[ b 1 sat 1 x -(ra_ratio/2) y (-0.5+(ra_ratio/2)) s 0.5 ]
+
 }
 
 

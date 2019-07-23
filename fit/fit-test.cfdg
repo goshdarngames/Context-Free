@@ -62,7 +62,7 @@ shape RA_SQ_TEST
 	Y =  0.5 - ra_ratio
 
 	RA [ b 1 sat 1 x X y Y ]
-	RA [ x X y Y s 0.9 ]
+	RA [ b 1 sat 1 h 180 x Y y X r 180]
 }
 
 shape SQ_RA_TEST
